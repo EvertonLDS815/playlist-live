@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/EvertonLDS815/playlist-live/issues"
   },
-  "homepage": "https://github.com/EvertonLDS815/playlist-live#readme"
+  "homepage": "https://github.com/EvertonLDS815/playlist-live#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "mongoose": "^6.6.7",
+    "nodemon": "^2.0.20"
+  }
 }
