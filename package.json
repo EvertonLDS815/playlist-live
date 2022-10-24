@@ -1,0 +1,20 @@
+{
+  "name": "playlist-live",
+  "version": "1.0.0",
+  "description": "Playlist de mu",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvertonLDS815/playlist-live.git"
+  },
+  "author": "Everton Lino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvertonLDS815/playlist-live/issues"
+  },
+  "homepage": "https://github.com/EvertonLDS815/playlist-live#readme"
+}
