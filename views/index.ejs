@@ -4,19 +4,59 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/style.css">
     <title>Playlist</title>
 </head>
 <body>
-    <h1>Hello ejs</h1>
+    <nav>
+        <ul>
+            <li>
+                <a href="/"><img src="/img/logo-da-blue.png" alt="Logo da Blue"></a>
+            </li>
+            <li>
+                <a href="/admin"><i class="bi bi-gear"></i></a>
+            </li>
+        </ul>
+    </nav>
+    <section id="player">
+            <h1>Playlist Blue</h1>
 
-    <a href="/admin">Administração</a>
-        <% playlist.forEach((music) => { %>
-        <section>
-            <h2><%= music.name%></h2>
-            <p><%= music.author%></p>
-            <img src="<%= music.linkImage%>" alt="imagem da música">
-            <audio controls src="<%= music.linkMusic%>" alt="imagem da música"></audio>
-        </section>
-        <% }) %>
+            <div>
+                <img id="currentImg" src="/img/musicoff.jpg" alt="">
+                <h2 id="currentName">Título</h2>
+                <h2 id="currentArtist">Artista</h2>
+            </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nome</th>
+                        <th>Artista</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% playlist.forEach((music) => { %>
+                        <tr>
+                            <td>
+                                <img src="<%= music.linkImage%>" alt="imagem da música">
+                            </td>
+                            <td>
+                                <%= music.name%>
+                            </td>
+                            <td>
+                                <%= music.author%>
+                            </td>
+                            <td>
+                                <audio controls class="audio" src="<%= music.linkMusic%>" alt="imagem da música"></audio>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </body>
 </html>
