@@ -13,8 +13,9 @@ app.use(express.urlencoded());
 
 connectToDb();
 
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", async (req, res) => {
+  const playlist = await Music.find();
+  res.render("index", { playlist });
 });
 
 app.get("/admin", (req, res) => {
@@ -26,6 +27,6 @@ app.post("/create", async (req, res) => {
   await Music.create(music);
   res.redirect("/");
 });
-app.listen(3000, () =>
+app.listen(port, () =>
   console.log(`Servidor rodando em http://localhost:${port}`)
 );
