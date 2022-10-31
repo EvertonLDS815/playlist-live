@@ -9,7 +9,9 @@ controls.addEventListener("click", function (event) {
   let music = {};
 
   if (event.target.id != "controls") {
-    const musics = event.path[2].childNodes[3].childNodes[5].childNodes[1].childNodes[3].childNodes;
+    const musics =
+      event.path[2].childNodes[3].childNodes[5].childNodes[1].childNodes[3]
+        .childNodes;
 
     musics.forEach(function (item) {
       if (item.nodeName != "#text") {
@@ -37,10 +39,13 @@ controls.addEventListener("click", function (event) {
 
     progressbar.max = currentMusic.audio.duration;
     textTotalDuration.innerText = secondsToMinutes(currentMusic.audio.duration);
-    textCurrentDuration.innerText = secondsToMinutes(
-      currentMusic.audio.currentTime
-    );
-    progressbar.valueAsNumber = currentMusic.audio.currentTime;
+
+    currentMusic.audio.ontimeupdate = function () {
+      textCurrentDuration.innerText = secondsToMinutes(
+        currentMusic.audio.currentTime
+      );
+      progressbar.valueAsNumber = currentMusic.audio.currentTime;
+    };
   }
 
   if (event.target.id == "play-control") {
@@ -57,6 +62,28 @@ controls.addEventListener("click", function (event) {
       currentMusic.audio.pause();
       isPlaying = false;
     }
+  }
+
+  if (event.target.id == "vol-icon") {
+    currentMusic.audio.muted = !currentMusic.audio.muted;
+    if (currentMusic.audio.muted) {
+      event.target.classList.replace(
+        "bi-volume-up-fill",
+        "bi-volume-mute-fill"
+      );
+    } else {
+      event.target.classList.replace(
+        "bi-volume-mute-fill",
+        "bi-volume-up-fill"
+      );
+    }
+  }
+
+  if (event.target.id == "volume") {
+    currentMusic.audio.volume = event.target.valueAsNumber / 100;
+  }
+  if (event.target.id == "progressbar") {
+    currentMusic.audio.currentTime = event.target.valueAsNumber;
   }
 });
 
