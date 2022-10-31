@@ -26,6 +26,7 @@ nav a {
 }
 #currentImg {
     width: 300px;
+    height: 225px;
 }
 #player {
     display: flex;
