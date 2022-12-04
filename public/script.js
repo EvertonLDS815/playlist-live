@@ -23,7 +23,7 @@ controls.addEventListener("click", function (event) {
         music = {};
       }
     });
-    console.log(musics);
+    // console.log(audios[index]);
   }
 
   function updateDataMusic() {
@@ -32,6 +32,12 @@ controls.addEventListener("click", function (event) {
     document.querySelector("#currentName").innerText = currentMusic.name;
     document.querySelector("#currentArtist").innerText = currentMusic.artist;
     document.querySelector("#volume").value = currentMusic.audio.volume * 100;
+
+    const lichanged = document.querySelectorAll(".li-changed");
+    for(i = 0; i < lichanged.length; i++) {
+      lichanged[i].style.background = 'none'
+    }
+    lichanged[index].style.background = '#1c1c1c';
 
     const progressbar = document.querySelector("#progressbar");
     const textCurrentDuration = document.querySelector("#current-duration");
@@ -92,7 +98,7 @@ controls.addEventListener("click", function (event) {
 
   if (event.target.id == "next-control") {
       index++;
-
+      console.log(audios[index]);
       if (index == audios.length) {
         index = 0;
       }
