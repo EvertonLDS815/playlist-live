@@ -9,40 +9,24 @@ controls.addEventListener("click", function (event) {
   let music = {};
 
   if (event.target.id != "controls") {
-    try {
-      const musics =
-        event.path[2]?.childNodes[3]?.childNodes[5]?.childNodes[1]?.childNodes[3]
-          ?.childNodes || [];
+    const musics =
+      event.path[2].childNodes[3].childNodes[5].childNodes[1].childNodes[3]
+        .childNodes;
 
-      musics.forEach(function (item) {
-        if (item.nodeName != "#text") {
-          try {
-            music.name = item.childNodes[3]?.childNodes[0]?.data || "";
-            music.artist = item.childNodes[5]?.childNodes[0]?.data || "";
-            music.image = item.childNodes[1]?.childNodes[1]?.currentSrc || "";
-            music.audio = item.childNodes[7]?.childNodes[1] || null;
-
-            if (music.audio) {
-              audios.push(music);
-            }
-
-            music = {};
-          } catch (error) {
-            console.error("Error accessing child nodes: ", error);
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Failed to get musics: ", error);
-    }
+    musics.forEach(function (item) {
+      if (item.nodeName != "#text") {
+        music.name = item.childNodes[3].childNodes[0].data;
+        music.artist = item.childNodes[5].childNodes[0].data;
+        music.image = item.childNodes[1].childNodes[1].currentSrc;
+        music.audio = item.childNodes[7].childNodes[1];
+        audios.push(music);
+        music = {};
+      }
+    });
+    // console.log(audios[index]);
   }
 
   function updateDataMusic() {
-    if (!audios[index]) {
-      console.error("No current music found.");
-      return;
-    }
-
     currentMusic = audios[index];
     document.querySelector("#currentImg").src = currentMusic.image;
     document.querySelector("#currentName").innerText = currentMusic.name;
@@ -50,12 +34,10 @@ controls.addEventListener("click", function (event) {
     document.querySelector("#volume").value = currentMusic.audio.volume * 100;
 
     const lichanged = document.querySelectorAll(".li-changed");
-    for (let i = 0; i < lichanged.length; i++) {
-      lichanged[i].style.background = 'none';
+    for(i = 0; i < lichanged.length; i++) {
+      lichanged[i].style.background = 'none'
     }
-    if (lichanged[index]) {
-      lichanged[index].style.background = '#1c1c1c';
-    }
+    lichanged[index].style.background = '#1c1c1c';
 
     const progressbar = document.querySelector("#progressbar");
     const textCurrentDuration = document.querySelector("#current-duration");
@@ -115,35 +97,8 @@ controls.addEventListener("click", function (event) {
   }
 
   if (event.target.id == "next-control") {
-    index++;
-    if (index == audios.length) {
-      index = 0;
-    }
-
-    currentMusic.audio.pause();
-    updateDataMusic();
-    currentMusic.audio.play();
-    btnPlay.classList.replace("bi-play-fill", "bi-pause-fill");
-  }
-
-  if (event.target.id == "prev-control") {
-    index--;
-
-    if (index == -1) {
-      index = audios.length - 1;
-    }
-
-    currentMusic.audio.pause();
-    updateDataMusic();
-    currentMusic.audio.play();
-    btnPlay.classList.replace("bi-play-fill", "bi-pause-fill");
-    musicEnded();
-  }
-
-  function musicEnded() {
-    currentMusic.audio.addEventListener("ended", function () {
       index++;
-
+      console.log(audios[index]);
       if (index == audios.length) {
         index = 0;
       }
@@ -152,7 +107,35 @@ controls.addEventListener("click", function (event) {
       updateDataMusic();
       currentMusic.audio.play();
       btnPlay.classList.replace("bi-play-fill", "bi-pause-fill");
-    });
+  }
+
+  if (event.target.id == "prev-control") {
+      index--;
+
+      if (index == -1) {
+        index = audios.length -1;
+      }
+
+      currentMusic.audio.pause();
+      updateDataMusic();
+      currentMusic.audio.play();
+      btnPlay.classList.replace("bi-play-fill", "bi-pause-fill");
+      musicEnded();
+  }
+
+  function musicEnded() {
+    currentMusic.audio.addEventListener("ended", function() {
+      index++;
+
+      if (index == -1) {
+        index = 0;
+      }
+
+      currentMusic.audio.pause();
+      updateDataMusic();
+      currentMusic.audio.play();
+      btnPlay.classList.replace("bi-play-fill", "bi-pause-fill");
+    })
   }
 });
 
