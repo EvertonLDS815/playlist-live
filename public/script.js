@@ -9,73 +9,67 @@ controls.addEventListener("click", function (event) {
   let music = {};
 
   if (event.target.id != "controls") {
-    let musics;
     try {
-      musics = event.target.closest("#controls").querySelectorAll(".music-item");
-    } catch (error) {
-      console.error("Failed to get musics: ", error);
-      return;
-    }
+      const musics =
+        event.path[2]?.childNodes[3]?.childNodes[5]?.childNodes[1]?.childNodes[3]
+          ?.childNodes || [];
 
-    musics.forEach(function (item) {
-      if (item.nodeType === Node.ELEMENT_NODE) {
-        try {
-          let nameNode = item.childNodes[3]?.childNodes[0];
-          let artistNode = item.childNodes[5]?.childNodes[0];
-          let imageNode = item.childNodes[1]?.childNodes[1];
-          let audioNode = item.childNodes[7]?.childNodes[1];
-
-          if (nameNode && artistNode && imageNode && audioNode) {
-            music.name = nameNode.data || "";
-            music.artist = artistNode.data || "";
-            music.image = imageNode.currentSrc || "";
-            music.audio = audioNode || null;
+      musics.forEach(function (item) {
+        if (item.nodeName != "#text") {
+          try {
+            music.name = item.childNodes[3]?.childNodes[0]?.data || "";
+            music.artist = item.childNodes[5]?.childNodes[0]?.data || "";
+            music.image = item.childNodes[1]?.childNodes[1]?.currentSrc || "";
+            music.audio = item.childNodes[7]?.childNodes[1] || null;
 
             if (music.audio) {
               audios.push(music);
             }
-          }
 
-          music = {};
-        } catch (error) {
-          console.error("Error accessing child nodes: ", error);
+            music = {};
+          } catch (error) {
+            console.error("Error accessing child nodes: ", error);
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.error("Failed to get musics: ", error);
+    }
   }
 
   function updateDataMusic() {
-    currentMusic = audios[index];
-    if (currentMusic) {
-      document.querySelector("#currentImg").src = currentMusic.image || "";
-      document.querySelector("#currentName").innerText = currentMusic.name || "";
-      document.querySelector("#currentArtist").innerText = currentMusic.artist || "";
-      document.querySelector("#volume").value = currentMusic.audio.volume * 100 || 100;
-
-      const lichanged = document.querySelectorAll(".li-changed");
-      for (let i = 0; i < lichanged.length; i++) {
-        lichanged[i].style.background = 'none';
-      }
-      if (lichanged[index]) {
-        lichanged[index].style.background = '#1c1c1c';
-      }
-
-      const progressbar = document.querySelector("#progressbar");
-      const textCurrentDuration = document.querySelector("#current-duration");
-      const textTotalDuration = document.querySelector("#total-duration");
-
-      progressbar.max = currentMusic.audio.duration || 0;
-      textTotalDuration.innerText = secondsToMinutes(currentMusic.audio.duration || 0);
-
-      currentMusic.audio.ontimeupdate = function () {
-        textCurrentDuration.innerText = secondsToMinutes(
-          currentMusic.audio.currentTime
-        );
-        progressbar.valueAsNumber = currentMusic.audio.currentTime;
-      };
-    } else {
+    if (!audios[index]) {
       console.error("No current music found.");
+      return;
     }
+
+    currentMusic = audios[index];
+    document.querySelector("#currentImg").src = currentMusic.image;
+    document.querySelector("#currentName").innerText = currentMusic.name;
+    document.querySelector("#currentArtist").innerText = currentMusic.artist;
+    document.querySelector("#volume").value = currentMusic.audio.volume * 100;
+
+    const lichanged = document.querySelectorAll(".li-changed");
+    for (let i = 0; i < lichanged.length; i++) {
+      lichanged[i].style.background = 'none';
+    }
+    if (lichanged[index]) {
+      lichanged[index].style.background = '#1c1c1c';
+    }
+
+    const progressbar = document.querySelector("#progressbar");
+    const textCurrentDuration = document.querySelector("#current-duration");
+    const textTotalDuration = document.querySelector("#total-duration");
+
+    progressbar.max = currentMusic.audio.duration;
+    textTotalDuration.innerText = secondsToMinutes(currentMusic.audio.duration);
+
+    currentMusic.audio.ontimeupdate = function () {
+      textCurrentDuration.innerText = secondsToMinutes(
+        currentMusic.audio.currentTime
+      );
+      progressbar.valueAsNumber = currentMusic.audio.currentTime;
+    };
   }
 
   if (event.target.id == "play-control") {
@@ -150,7 +144,7 @@ controls.addEventListener("click", function (event) {
     currentMusic.audio.addEventListener("ended", function () {
       index++;
 
-      if (index == -1) {
+      if (index == audios.length) {
         index = 0;
       }
 
