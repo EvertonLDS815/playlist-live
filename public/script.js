@@ -18,16 +18,23 @@ controls.addEventListener("click", function (event) {
     }
 
     musics.forEach(function (item) {
-      if (item.nodeName != "#text") {
-        music.name = item.querySelector(".music-name").innerText;
-        music.artist = item.querySelector(".music-artist").innerText;
-        music.image = item.querySelector(".music-image").src;
-        music.audio = item.querySelector(".music-audio");
-        audios.push(music);
-        music = {};
+      if (item.nodeType === Node.ELEMENT_NODE) {
+        try {
+          music.name = item.childNodes[3].childNodes[0].data || "";
+          music.artist = item.childNodes[5].childNodes[0].data || "";
+          music.image = item.childNodes[1].childNodes[1].currentSrc || "";
+          music.audio = item.childNodes[7].childNodes[1] || null;
+
+          if (music.audio) {
+            audios.push(music);
+          }
+
+          music = {};
+        } catch (error) {
+          console.error("Error accessing child nodes: ", error);
+        }
       }
     });
-    // console.log(audios[index]);
   }
 
   function updateDataMusic() {
@@ -104,7 +111,6 @@ controls.addEventListener("click", function (event) {
 
   if (event.target.id == "next-control") {
     index++;
-    console.log(audios[index]);
     if (index == audios.length) {
       index = 0;
     }
